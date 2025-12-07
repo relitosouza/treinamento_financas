@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento Dinâmico: Adm Pública</title>
+    <title>Treinamento: Administração Pública e Orçamento</title>
     <style>
         :root {
-            --primary-color: #003366;
+            --primary-color: #003366; /* Azul Escuro */
             --secondary-color: #005b96;
             --accent-color: #f0f0f0;
             --success-color: #28a745;
@@ -16,29 +16,118 @@
             --text-color: #333;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; color: var(--text-color); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .container { background-color: white; width: 90%; max-width: 800px; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        header { text-align: center; margin-bottom: 2rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 1rem; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1rem;
+        }
+
         h1 { color: var(--primary-color); margin: 0; font-size: 1.8rem; }
-        input[type="text"] { padding: 10px; font-size: 1rem; width: 70%; margin: 1rem 0; border: 1px solid #ccc; border-radius: 5px; }
-        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        h2 { font-size: 1.2rem; color: #666; font-weight: normal; }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1rem;
+            width: 70%;
+            margin: 1rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
         button:hover { background-color: var(--secondary-color); }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
+
         .hidden { display: none; }
+
         .question-container { margin-bottom: 1.5rem; }
         .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
+
         .options-grid { display: grid; gap: 10px; }
-        .option-btn { background-color: white; border: 2px solid #ddd; color: var(--text-color); text-align: left; padding: 15px; font-size: 1rem; width: 100%; cursor: pointer; transition: all 0.2s; }
-        .option-btn:hover:not(:disabled) { background-color: var(--accent-color); border-color: var(--secondary-color); }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #ddd;
+            color: var(--text-color);
+            text-align: left;
+            padding: 15px;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--accent-color);
+            border-color: var(--secondary-color);
+        }
+
         .option-btn.correct { background-color: #d4edda; border-color: var(--success-color); color: #155724; }
         .option-btn.incorrect { background-color: #f8d7da; border-color: var(--error-color); color: #721c24; }
-        .feedback-box { margin-top: 1rem; padding: 1rem; border-radius: 5px; background-color: #e2e3e5; border-left: 5px solid var(--primary-color); }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #e2e3e5;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Resultados */
         .result-card { text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 8px; }
         .score-display { font-size: 3rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
-        .study-plan-box { text-align: left; background: var(--warning-bg); padding: 15px; border-radius: 5px; margin-top: 15px; border: 1px solid #ffeeba; color: var(--warning-text); }
         
-        /* Spinner de Carregamento */
-        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        .study-plan-box {
+            text-align: left;
+            background: var(--warning-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 1px solid #ffeeba;
+            color: var(--warning-text);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -52,11 +141,11 @@
 
     <div id="loading-screen" style="text-align: center;">
         <div class="loader"></div>
-        <p>Carregando perguntas do banco de dados...</p>
+        <p>Acessando banco de questões e sorteando perguntas...</p>
     </div>
 
     <div id="intro-screen" class="hidden" style="text-align: center;">
-        <p>Banco de questões carregado com sucesso!</p>
+        <p><strong>10 perguntas sorteadas com sucesso!</strong></p>
         <p>Por favor, identifique-se para iniciar.</p>
         <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
         <br>
@@ -89,53 +178,71 @@
             <div class="score-display">
                 <span id="score">0</span>%
             </div>
+            
             <div id="result-message"></div>
-            <p id="saving-msg" style="color: #666; font-style: italic;">Enviando resultados...</p>
+            
+            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Enviando resultados para o banco de dados...</p>
+            
             <div style="margin-top: 20px;">
-                <button onclick="location.reload()">Refazer Teste</button>
+                <button onclick="location.reload()">Refazer Teste (Novo Sorteio)</button>
+                <button onclick="window.print()">Imprimir</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- CONFIGURAÇÃO ---
-    // COLE SUA URL AQUI (A MESMA QUE VOCÊ USOU ANTES)
-    const GOOGLE_SCRIPT_URL = 'COLE_SUA_URL_DO_GOOGLE_SCRIPT_AQUI'; 
-    // --------------------
+    // ==========================================================
+    // CONFIGURAÇÃO: COLE SUA URL DO GOOGLE APPS SCRIPT ABAIXO
+    // ==========================================================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec'; 
+    // ==========================================================
 
-    let questions = []; // Array vazio, será preenchido pelo Google Sheets
+    let questions = []; 
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
     let mistakes = new Set(); 
 
-    // Ao carregar a página, busca as perguntas
+    // Ao carregar a página, busca as perguntas e faz o sorteio
     window.onload = function() {
         fetchQuestions();
     };
 
     function fetchQuestions() {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
-            alert("Erro: URL do Script não configurada no código HTML.");
+            alert("ATENÇÃO: Você precisa editar o arquivo HTML e colar a URL do seu Google Script na linha 155.");
             return;
         }
 
-        // O 'fetch' aqui usa method GET por padrão, que aciona o doGet no Apps Script
         fetch(GOOGLE_SCRIPT_URL)
             .then(response => response.json())
             .then(data => {
-                questions = data;
+                // Lógica de Embaralhamento (Shuffle)
+                let allQuestions = data;
+                
+                // Algoritmo Fisher-Yates para misturar o array
+                for (let i = allQuestions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
+                }
+
+                // Pega apenas as 10 primeiras após misturar
+                // Se a planilha tiver menos de 10, pega todas as disponíveis
+                const maxQuestions = Math.min(10, allQuestions.length);
+                questions = allQuestions.slice(0, maxQuestions);
+
                 if(questions.length > 0) {
                     document.getElementById('loading-screen').classList.add('hidden');
                     document.getElementById('intro-screen').classList.remove('hidden');
+                    document.getElementById('total-q-num').innerText = questions.length;
                 } else {
-                    alert("Nenhuma pergunta encontrada na planilha.");
+                    alert("A planilha está vazia ou não foi encontrada.");
                 }
             })
             .catch(error => {
-                console.error('Erro ao buscar perguntas:', error);
-                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro ao carregar perguntas. Verifique sua conexão ou a URL do Script.</p>";
+                console.error('Erro:', error);
+                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro de conexão. Verifique se a URL do Script está correta e se você tem internet.</p>";
             });
     }
 
@@ -145,7 +252,6 @@
         studentName = nameInput.value;
         document.getElementById('intro-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.remove('hidden');
-        document.getElementById('total-q-num').innerText = questions.length;
         loadQuestion();
     }
 
@@ -173,7 +279,7 @@
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach(btn => btn.disabled = true);
 
-        // Converte string para número se necessário, embora o script já envie número
+        // Garante que a resposta seja tratada como número
         const correctAnswer = parseInt(currentData.answer);
 
         if (selectedIndex === correctAnswer) {
@@ -182,7 +288,10 @@
         } else {
             btnElement.classList.add('incorrect');
             buttons[correctAnswer].classList.add('correct');
-            mistakes.add(currentData.topic);
+            // Adiciona o tópico à lista de erros (se existir)
+            if(currentData.topic) {
+                mistakes.add(currentData.topic);
+            }
         }
 
         document.getElementById('feedback-text').innerText = currentData.rationale;
@@ -209,22 +318,23 @@
 
         let htmlContent = "";
         if (percentage === 100) {
-            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Domínio total.</p>";
+            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Você dominou este teste.</p>";
         } else {
-            let msg = percentage >= 70 ? "Muito bom!" : "Precisa revisar.";
+            let msg = percentage >= 70 ? "Muito bom! Continue estudando." : "Recomendamos revisar o conteúdo.";
             htmlContent = `<p>${msg}</p>`;
             
+            // Plano de Estudo Dinâmico
             if (mistakes.size > 0) {
                 htmlContent += `<div class="study-plan-box"><h4>🔍 Tópicos para revisar:</h4><ul>`;
                 mistakes.forEach(topic => {
-                    htmlContent += `<li>Revisar conceitos de: <strong>${topic}</strong></li>`;
+                    htmlContent += `<li>Rever conceitos sobre: <strong>${topic}</strong></li>`;
                 });
                 htmlContent += `</ul></div>`;
             }
         }
         document.getElementById('result-message').innerHTML = htmlContent;
 
-        // Enviar resultados de volta para a planilha (usando o doPost)
+        // Salvar no Google Sheets
         sendResults(studentName, score, percentage + "%", Array.from(mistakes).join(", "));
     }
 
@@ -244,7 +354,8 @@
             loadingMsg.style.color = "green";
         })
         .catch(error => {
-            loadingMsg.innerText = "⚠️ Erro ao salvar dados.";
+            console.error(error);
+            loadingMsg.innerText = "⚠️ Erro ao salvar dados. Verifique a conexão.";
         });
     }
 </script>
