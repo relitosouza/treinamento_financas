@@ -1,95 +1,25 @@
 <script>
     // --- CONFIGURAÇÃO ---
-    // Mantenha o seu link do Google Script aqui:
+    // Mantenha o seu link aqui (já está correto):
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec'; 
     // --------------------
 
-    // Mapeamento de recomendações de estudo por tópico
-    const studyGuides = {
-        "Planejamento": "Revisar os prazos e definições do PPA, LDO e LOA (Hierarquia das leis orçamentárias).",
-        "Empenho": "Estudar as diferenças entre Empenho Ordinário, Global e Estimativo.",
-        "Liquidação": "Rever o conceito de Liquidação (reconhecimento da dívida e verificação da entrega).",
-        "Classificação": "Aprofundar nos níveis da despesa, especialmente Elemento e Subelemento.",
-        "Contingência": "Entender o papel da Reserva de Contingência para riscos fiscais."
-    };
-
     const questions = [
-        { 
-            q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?", 
-            options: ["LDO", "LOA", "PPA", "LRF"], 
-            answer: 2, 
-            topic: "Planejamento",
-            rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas." 
-        },
-        { 
-            q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?", 
-            options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"], 
-            answer: 1, 
-            topic: "Planejamento",
-            rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte." 
-        },
-        { 
-            q: "Como é definido o empenho do tipo 'Global'?", 
-            options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas." 
-        },
-        { 
-            q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?", 
-            options: ["Ordinário", "Global", "Estimativo", "De Liquidação"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial." 
-        },
-        { 
-            q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?", 
-            options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"], 
-            answer: 2, 
-            topic: "Liquidação",
-            rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar." 
-        },
-        { 
-            q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?", 
-            options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"], 
-            answer: 1, 
-            topic: "Classificação",
-            rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)." 
-        },
-        { 
-            q: "Para que serve a 'Reserva de Contingência' na LOA?", 
-            options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"], 
-            answer: 1, 
-            topic: "Contingência",
-            rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos." 
-        },
-        { 
-            q: "O que caracteriza o 'Empenho Ordinário'?", 
-            options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez." 
-        },
-        { 
-            q: "O que significa dizer que uma despesa foi 'Liquidada'?", 
-            options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"], 
-            answer: 1, 
-            topic: "Liquidação",
-            rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação." 
-        },
-        { 
-            q: "PPA, LDO e LOA são leis de iniciativa de quem?", 
-            options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"], 
-            answer: 2, 
-            topic: "Planejamento",
-            rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento." 
-        }
+        { q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?", options: ["LDO", "LOA", "PPA", "LRF"], answer: 2, rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas." },
+        { q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?", options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"], answer: 1, rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte." },
+        { q: "Como é definido o empenho do tipo 'Global'?", options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"], answer: 2, rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas." },
+        { q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?", options: ["Ordinário", "Global", "Estimativo", "De Liquidação"], answer: 2, rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial." },
+        { q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?", options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"], answer: 2, rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar." },
+        { q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?", options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"], answer: 1, rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)." },
+        { q: "Para que serve a 'Reserva de Contingência' na LOA?", options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"], answer: 1, rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos." },
+        { q: "O que caracteriza o 'Empenho Ordinário'?", options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"], answer: 2, rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez." },
+        { q: "O que significa dizer que uma despesa foi 'Liquidada'?", options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"], answer: 1, rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação." },
+        { q: "PPA, LDO e LOA são leis de iniciativa de quem?", options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"], answer: 2, rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento." }
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
-    let mistakes = new Set(); // Conjunto para armazenar tópicos errados (não repete tópicos)
 
     function startQuiz() {
         const nameInput = document.getElementById('student-name');
@@ -122,17 +52,13 @@
         const currentData = questions[currentQuestionIndex];
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach(btn => btn.disabled = true);
-        
         if (selectedIndex === currentData.answer) {
             btnElement.classList.add('correct');
             score++;
         } else {
             btnElement.classList.add('incorrect');
             buttons[currentData.answer].classList.add('correct');
-            // Adiciona o tópico à lista de erros para recomendação posterior
-            mistakes.add(currentData.topic);
         }
-        
         document.getElementById('feedback-text').innerText = currentData.rationale;
         document.getElementById('feedback-container').classList.remove('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
@@ -151,54 +77,35 @@
         document.getElementById('result-name').innerText = studentName;
         document.getElementById('score').innerText = percentage;
 
-        // Gerar Mensagem de Feedback
         let message = "";
-        let studyPlanHTML = "";
+        if (percentage === 100) message = "Excelente! Você domina completamente os conceitos.";
+        else if (percentage >= 70) message = "Muito bom! Você tem um ótimo conhecimento.";
+        else message = "Bom esforço. Recomendamos revisar os conceitos.";
+        document.getElementById('result-message').innerText = message;
 
-        if (percentage === 100) {
-            message = "Excelente! Você domina completamente os conceitos.";
-            studyPlanHTML = "<p style='color:green'><strong>Parabéns!</strong> Você não precisa de reforço imediato.</p>";
-        } else {
-            if (percentage >= 70) message = "Muito bom! Mas existem alguns pontos de atenção.";
-            else message = "Atenção: Recomendamos uma revisão focada nos itens abaixo.";
-
-            // Montar lista de recomendações baseada nos erros
-            studyPlanHTML = "<div style='text-align:left; background:#fff3cd; padding:15px; border-radius:5px; margin-top:15px; border:1px solid #ffeeba;'>";
-            studyPlanHTML += "<h4 style='margin-top:0; color:#856404;'>Plano de Melhoria Individual:</h4>";
-            studyPlanHTML += "<ul style='margin-bottom:0;'>";
-            
-            mistakes.forEach(topic => {
-                const guide = studyGuides[topic];
-                studyPlanHTML += `<li><strong>${topic}:</strong> ${guide}</li>`;
-            });
-            
-            studyPlanHTML += "</ul></div>";
-        }
-
-        document.getElementById('result-message').innerHTML = message + studyPlanHTML;
-
-        // Enviar para o Google Sheets (incluindo os tópicos que precisa estudar)
-        const topicsToStudy = Array.from(mistakes).join(", ");
-        sendToGoogleSheets(studentName, score, percentage + "%", topicsToStudy);
+        // Enviar para o Google Sheets
+        sendToGoogleSheets(studentName, score, percentage + "%");
     }
 
-    function sendToGoogleSheets(nome, acertos, percentual, topicosErros) {
+    // --- AQUI ESTAVA O ERRO, AGORA CORRIGIDO ---
+    function sendToGoogleSheets(nome, acertos, percentual) {
         const loadingMsg = document.getElementById('loading-msg');
         
+        // Verificação simplificada: só dá erro se estiver vazio ou com o texto de exemplo antigo
         if (GOOGLE_SCRIPT_URL === '' || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
-            loadingMsg.innerText = "Erro: URL do Google Script não configurada.";
+            loadingMsg.innerText = "Erro: URL do Google Script não configurada no código.";
             loadingMsg.style.color = "red";
             return;
         }
 
-        // Adicionei os tópicos de erro no envio se quiser registrar na planilha futuramente
-        // (Nota: sua planilha atual só tem 4 colunas, então o erro não será salvo lá a menos que adicione uma coluna 'E' para Observações, mas o código funcionará sem quebrar)
         const data = { nome: nome, acertos: acertos, percentual: percentual };
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors', 
-            headers: { 'Content-Type': 'text/plain' },
+            headers: {
+                'Content-Type': 'text/plain'
+            },
             body: JSON.stringify(data)
         })
         .then(() => {
@@ -207,7 +114,7 @@
         })
         .catch(error => {
             console.error('Erro:', error);
-            loadingMsg.innerText = "⚠️ Erro ao salvar dados.";
+            loadingMsg.innerText = "⚠️ Erro ao salvar dados. Verifique sua conexão.";
         });
     }
 </script>
