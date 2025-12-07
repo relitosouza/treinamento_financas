@@ -1,25 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento: Administração Pública e Orçamento</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Azul Escuro */
+            --secondary-color: #005b96;
+            --accent-color: #f0f0f0;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --warning-bg: #fff3cd;
+            --warning-text: #856404;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1rem;
+        }
+
+        h1 { color: var(--primary-color); margin: 0; font-size: 1.8rem; }
+        h2 { font-size: 1.2rem; color: #666; font-weight: normal; }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1rem;
+            width: 70%;
+            margin: 1rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover { background-color: var(--secondary-color); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; }
+
+        .hidden { display: none; }
+
+        .question-container { margin-bottom: 1.5rem; }
+        .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
+
+        .options-grid { display: grid; gap: 10px; }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #ddd;
+            color: var(--text-color);
+            text-align: left;
+            padding: 15px;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--accent-color);
+            border-color: var(--secondary-color);
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #e2e3e5;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Estilos do Resultado */
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+
+        .study-plan-box {
+            text-align: left;
+            background: var(--warning-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border: 1px solid #ffeeba;
+            color: var(--warning-text);
+        }
+        
+        .study-plan-box ul {
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+
+        .study-plan-box li {
+            margin-bottom: 8px;
+        }
+
+        #loading-msg {
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Avaliação de Conhecimento</h1>
+        <h2>Finanças Públicas: PPA, LDO, LOA e Execução da Despesa</h2>
+    </header>
+
+    <div id="intro-screen" style="text-align: center;">
+        <p>Por favor, identifique-se para iniciar o treinamento.</p>
+        <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
+        <br>
+        <button onclick="startQuiz()">Iniciar Questionário</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div style="margin-bottom: 10px; text-align: right; color: #666;">
+            Questão <span id="current-q-num">1</span> de <span id="total-q-num">10</span>
+        </div>
+        
+        <div class="question-container">
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-grid"></div>
+        </div>
+
+        <div id="feedback-container" class="hidden feedback-box">
+            <strong>Explicação:</strong> <span id="feedback-text"></span>
+        </div>
+
+        <div style="text-align: right; margin-top: 1rem;">
+            <button id="next-btn" class="hidden" onclick="nextQuestion()">Próxima Pergunta</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <div class="result-card">
+            <h3>Resultado Final</h3>
+            <p>Participante: <strong id="result-name"></strong></p>
+            <div class="score-display">
+                <span id="score">0</span>%
+            </div>
+            
+            <div id="result-message"></div>
+            
+            <p id="loading-msg">Enviando resultados para o sistema...</p>
+            
+            <div style="margin-top: 20px;">
+                <button onclick="location.reload()">Refazer Teste</button>
+                <button onclick="window.print()">Imprimir Resultado</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     // --- CONFIGURAÇÃO ---
-    // Mantenha o seu link aqui (já está correto):
+    // URL configurada corretamente
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec'; 
     // --------------------
 
+    // Guia de Estudo: Mensagens personalizadas por tópico
+    const studyGuides = {
+        "Planejamento": "Revisar os prazos e definições do PPA, LDO e LOA (Hierarquia das leis orçamentárias).",
+        "Empenho": "Estudar as diferenças entre Empenho Ordinário, Global e Estimativo.",
+        "Liquidação": "Rever o conceito de Liquidação (reconhecimento da dívida e verificação da entrega).",
+        "Classificação": "Aprofundar nos níveis da despesa, especialmente Elemento e Subelemento.",
+        "Contingência": "Entender o papel da Reserva de Contingência para riscos fiscais."
+    };
+
+    // Banco de Questões com Tópicos
     const questions = [
-        { q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?", options: ["LDO", "LOA", "PPA", "LRF"], answer: 2, rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas." },
-        { q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?", options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"], answer: 1, rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte." },
-        { q: "Como é definido o empenho do tipo 'Global'?", options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"], answer: 2, rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas." },
-        { q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?", options: ["Ordinário", "Global", "Estimativo", "De Liquidação"], answer: 2, rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial." },
-        { q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?", options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"], answer: 2, rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar." },
-        { q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?", options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"], answer: 1, rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)." },
-        { q: "Para que serve a 'Reserva de Contingência' na LOA?", options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"], answer: 1, rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos." },
-        { q: "O que caracteriza o 'Empenho Ordinário'?", options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"], answer: 2, rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez." },
-        { q: "O que significa dizer que uma despesa foi 'Liquidada'?", options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"], answer: 1, rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação." },
-        { q: "PPA, LDO e LOA são leis de iniciativa de quem?", options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"], answer: 2, rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento." }
+        { 
+            q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?", 
+            options: ["LDO", "LOA", "PPA", "LRF"], 
+            answer: 2, 
+            topic: "Planejamento",
+            rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas." 
+        },
+        { 
+            q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?", 
+            options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"], 
+            answer: 1, 
+            topic: "Planejamento",
+            rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte." 
+        },
+        { 
+            q: "Como é definido o empenho do tipo 'Global'?", 
+            options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"], 
+            answer: 2, 
+            topic: "Empenho",
+            rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas." 
+        },
+        { 
+            q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?", 
+            options: ["Ordinário", "Global", "Estimativo", "De Liquidação"], 
+            answer: 2, 
+            topic: "Empenho",
+            rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial." 
+        },
+        { 
+            q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?", 
+            options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"], 
+            answer: 2, 
+            topic: "Liquidação",
+            rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar." 
+        },
+        { 
+            q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?", 
+            options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"], 
+            answer: 1, 
+            topic: "Classificação",
+            rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)." 
+        },
+        { 
+            q: "Para que serve a 'Reserva de Contingência' na LOA?", 
+            options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"], 
+            answer: 1, 
+            topic: "Contingência",
+            rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos." 
+        },
+        { 
+            q: "O que caracteriza o 'Empenho Ordinário'?", 
+            options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"], 
+            answer: 2, 
+            topic: "Empenho",
+            rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez." 
+        },
+        { 
+            q: "O que significa dizer que uma despesa foi 'Liquidada'?", 
+            options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"], 
+            answer: 1, 
+            topic: "Liquidação",
+            rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação." 
+        },
+        { 
+            q: "PPA, LDO e LOA são leis de iniciativa de quem?", 
+            options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"], 
+            answer: 2, 
+            topic: "Planejamento",
+            rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento." 
+        }
     ];
 
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
+    let mistakes = new Set(); // Armazena tópicos errados
 
     function startQuiz() {
         const nameInput = document.getElementById('student-name');
@@ -33,12 +315,16 @@
 
     function loadQuestion() {
         const currentData = questions[currentQuestionIndex];
+        
         document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
         document.getElementById('feedback-container').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
+
         document.getElementById('question-text').innerText = currentData.q;
+
         const optionsContainer = document.getElementById('options-container');
-        optionsContainer.innerHTML = '';
+        optionsContainer.innerHTML = ''; 
+
         currentData.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
@@ -51,14 +337,19 @@
     function selectOption(selectedIndex, btnElement) {
         const currentData = questions[currentQuestionIndex];
         const buttons = document.querySelectorAll('.option-btn');
+        
         buttons.forEach(btn => btn.disabled = true);
+
         if (selectedIndex === currentData.answer) {
             btnElement.classList.add('correct');
             score++;
         } else {
             btnElement.classList.add('incorrect');
             buttons[currentData.answer].classList.add('correct');
+            // Registra o erro no tópico
+            mistakes.add(currentData.topic);
         }
+
         document.getElementById('feedback-text').innerText = currentData.rationale;
         document.getElementById('feedback-container').classList.remove('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
@@ -66,7 +357,11 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) { loadQuestion(); } else { showResults(); }
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
     }
 
     function showResults() {
@@ -77,23 +372,39 @@
         document.getElementById('result-name').innerText = studentName;
         document.getElementById('score').innerText = percentage;
 
-        let message = "";
-        if (percentage === 100) message = "Excelente! Você domina completamente os conceitos.";
-        else if (percentage >= 70) message = "Muito bom! Você tem um ótimo conhecimento.";
-        else message = "Bom esforço. Recomendamos revisar os conceitos.";
-        document.getElementById('result-message').innerText = message;
+        // Construção do Feedback Visual
+        let htmlContent = "";
+        
+        if (percentage === 100) {
+            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Você demonstrou domínio total do conteúdo.</p>";
+        } else {
+            let msg = percentage >= 70 ? "Muito bom! Você tem um bom conhecimento, mas atenção aos detalhes abaixo." : "Bom esforço. Recomendamos revisar os tópicos abaixo para fortalecer seu aprendizado.";
+            
+            htmlContent = `<p>${msg}</p>`;
+            
+            // Montar o Plano de Estudos
+            if (mistakes.size > 0) {
+                htmlContent += `<div class="study-plan-box"><h4>🔍 O que você deve estudar:</h4><ul>`;
+                mistakes.forEach(topic => {
+                    const guide = studyGuides[topic] || "Revisar este conceito.";
+                    htmlContent += `<li><strong>${topic}:</strong> ${guide}</li>`;
+                });
+                htmlContent += `</ul></div>`;
+            }
+        }
+
+        document.getElementById('result-message').innerHTML = htmlContent;
 
         // Enviar para o Google Sheets
         sendToGoogleSheets(studentName, score, percentage + "%");
     }
 
-    // --- AQUI ESTAVA O ERRO, AGORA CORRIGIDO ---
     function sendToGoogleSheets(nome, acertos, percentual) {
         const loadingMsg = document.getElementById('loading-msg');
         
-        // Verificação simplificada: só dá erro se estiver vazio ou com o texto de exemplo antigo
-        if (GOOGLE_SCRIPT_URL === '' || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
-            loadingMsg.innerText = "Erro: URL do Google Script não configurada no código.";
+        // Verifica se a URL está vazia
+        if (!GOOGLE_SCRIPT_URL) {
+            loadingMsg.innerText = "Erro: URL do Google Script não encontrada.";
             loadingMsg.style.color = "red";
             return;
         }
@@ -118,3 +429,6 @@
         });
     }
 </script>
+
+</body>
+</html>
