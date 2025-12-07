@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento: Administração Pública e Orçamento</title>
+    <style>
+        :root {
+            --primary-color: #003366; /* Azul Escuro Institucional */
+            --secondary-color: #005b96;
+            --accent-color: #f0f0f0;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: white;
+            width: 90%;
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 1rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: normal;
+        }
+
+        /* Tela de Entrada */
+        #intro-screen {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1rem;
+            width: 70%;
+            margin: 1rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Botões */
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Quiz */
+        .hidden {
+            display: none;
+        }
+
+        .question-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid #ddd;
+            color: var(--text-color);
+            text-align: left;
+            padding: 15px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--accent-color);
+            border-color: var(--secondary-color);
+        }
+
+        /* Feedback Styles */
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--success-color);
+            color: #155724;
+        }
+
+        .option-btn.incorrect {
+            background-color: #f8d7da;
+            border-color: var(--error-color);
+            color: #721c24;
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 5px;
+            background-color: #e2e3e5;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        /* Resultados */
+        .result-card {
+            text-align: center;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Avaliação de Conhecimento</h1>
+        <h2>Finanças Públicas: PPA, LDO, LOA e Execução da Despesa</h2>
+    </header>
+
+    <div id="intro-screen">
+        <p>Por favor, identifique-se para iniciar o treinamento.</p>
+        <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
+        <br>
+        <button onclick="startQuiz()">Iniciar Questionário</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div class="progress-bar" style="margin-bottom: 10px; text-align: right; color: #666;">
+            Questão <span id="current-q-num">1</span> de <span id="total-q-num">10</span>
+        </div>
+        
+        <div class="question-container">
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-grid"></div>
+        </div>
+
+        <div id="feedback-container" class="hidden feedback-box">
+            <strong>Explicação:</strong> <span id="feedback-text"></span>
+        </div>
+
+        <div style="text-align: right; margin-top: 1rem;">
+            <button id="next-btn" class="hidden" onclick="nextQuestion()">Próxima Pergunta</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <div class="result-card">
+            <h3>Resultado Final</h3>
+            <p>Participante: <strong id="result-name"></strong></p>
+            <div class="score-display">
+                <span id="score">0</span>%
+            </div>
+            <p id="result-message"></p>
+            <button onclick="location.reload()">Refazer Teste</button>
+            <button onclick="window.print()">Imprimir Resultado</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Banco de Perguntas (Baseado no seu pedido anterior)
+    const questions = [
+        {
+            q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?",
+            options: ["LDO", "LOA", "PPA", "LRF"],
+            answer: 2, // Índice da correta (0, 1, 2...)
+            rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas."
+        },
+        {
+            q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?",
+            options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"],
+            answer: 1,
+            rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte."
+        },
+        {
+            q: "Como é definido o empenho do tipo 'Global'?",
+            options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"],
+            answer: 2,
+            rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas."
+        },
+        {
+            q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?",
+            options: ["Ordinário", "Global", "Estimativo", "De Liquidação"],
+            answer: 2,
+            rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial."
+        },
+        {
+            q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?",
+            options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"],
+            answer: 2,
+            rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar."
+        },
+        {
+            q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?",
+            options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"],
+            answer: 1,
+            rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)."
+        },
+        {
+            q: "Para que serve a 'Reserva de Contingência' na LOA?",
+            options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"],
+            answer: 1,
+            rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos."
+        },
+        {
+            q: "O que caracteriza o 'Empenho Ordinário'?",
+            options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"],
+            answer: 2,
+            rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez."
+        },
+        {
+            q: "O que significa dizer que uma despesa foi 'Liquidada'?",
+            options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"],
+            answer: 1,
+            rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação."
+        },
+        {
+            q: "PPA, LDO e LOA são leis de iniciativa de quem?",
+            options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"],
+            answer: 2,
+            rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let studentName = "";
+
+    function startQuiz() {
+        const nameInput = document.getElementById('student-name');
+        if (nameInput.value.trim() === "") {
+            alert("Por favor, digite seu nome.");
+            return;
+        }
+        studentName = nameInput.value;
+        document.getElementById('intro-screen').classList.add('hidden');
+        document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('total-q-num').innerText = questions.length;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const currentData = questions[currentQuestionIndex];
+        
+        // Atualizar número da questão
+        document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+        
+        // Limpar feedback e botão próximo
+        document.getElementById('feedback-container').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+
+        // Carregar texto
+        document.getElementById('question-text').innerText = currentData.q;
+
+        // Carregar opções
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = ''; // Limpar anteriores
+
+        currentData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectOption(selectedIndex, btnElement) {
+        const currentData = questions[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        
+        // Desabilitar todos os botões para evitar clique duplo
+        buttons.forEach(btn => btn.disabled = true);
+
+        // Verificar resposta
+        if (selectedIndex === currentData.answer) {
+            btnElement.classList.add('correct');
+            score++;
+        } else {
+            btnElement.classList.add('incorrect');
+            // Mostrar qual era a correta
+            buttons[currentData.answer].classList.add('correct');
+        }
+
+        // Mostrar explicação
+        document.getElementById('feedback-text').innerText = currentData.rationale;
+        document.getElementById('feedback-container').classList.remove('hidden');
+        document.getElementById('next-btn').classList.remove('hidden');
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById('quiz-screen').classList.add('hidden');
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        const percentage = (score / questions.length) * 100;
+        document.getElementById('result-name').innerText = studentName;
+        document.getElementById('score').innerText = percentage;
+
+        let message = "";
+        if (percentage === 100) {
+            message = "Excelente! Você domina completamente os conceitos.";
+        } else if (percentage >= 70) {
+            message = "Muito bom! Você tem um ótimo conhecimento sobre o tema.";
+        } else {
+            message = "Bom esforço. Recomendamos revisar os conceitos de PPA, Empenhos e Classificações.";
+        }
+        document.getElementById('result-message').innerText = message;
+    }
+</script>
+
+</body>
+</html>
