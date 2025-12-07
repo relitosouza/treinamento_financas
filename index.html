@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento: Administração Pública e Orçamento</title>
+    <title>Treinamento Dinâmico: Adm Pública</title>
     <style>
         :root {
-            --primary-color: #003366; /* Azul Escuro */
+            --primary-color: #003366;
             --secondary-color: #005b96;
             --accent-color: #f0f0f0;
             --success-color: #28a745;
@@ -16,143 +16,30 @@
             --text-color: #333;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e9ecef;
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: white;
-            width: 90%;
-            max-width: 800px;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 2rem;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 1rem;
-        }
-
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e9ecef; color: var(--text-color); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background-color: white; width: 90%; max-width: 800px; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header { text-align: center; margin-bottom: 2rem; border-bottom: 2px solid var(--primary-color); padding-bottom: 1rem; }
         h1 { color: var(--primary-color); margin: 0; font-size: 1.8rem; }
-        h2 { font-size: 1.2rem; color: #666; font-weight: normal; }
-
-        input[type="text"] {
-            padding: 10px;
-            font-size: 1rem;
-            width: 70%;
-            margin: 1rem 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
+        input[type="text"] { padding: 10px; font-size: 1rem; width: 70%; margin: 1rem 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background-color: var(--primary-color); color: white; border: none; padding: 12px 24px; font-size: 1rem; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
         button:hover { background-color: var(--secondary-color); }
         button:disabled { background-color: #ccc; cursor: not-allowed; }
-
         .hidden { display: none; }
-
         .question-container { margin-bottom: 1.5rem; }
         .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
-
         .options-grid { display: grid; gap: 10px; }
-
-        .option-btn {
-            background-color: white;
-            border: 2px solid #ddd;
-            color: var(--text-color);
-            text-align: left;
-            padding: 15px;
-            font-size: 1rem;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background-color: var(--accent-color);
-            border-color: var(--secondary-color);
-        }
-
-        .option-btn.correct {
-            background-color: #d4edda;
-            border-color: var(--success-color);
-            color: #155724;
-        }
-
-        .option-btn.incorrect {
-            background-color: #f8d7da;
-            border-color: var(--error-color);
-            color: #721c24;
-        }
-
-        .feedback-box {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 5px;
-            background-color: #e2e3e5;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        /* Estilos do Resultado */
-        .result-card {
-            text-align: center;
-            padding: 2rem;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .score-display {
-            font-size: 3rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin: 1rem 0;
-        }
-
-        .study-plan-box {
-            text-align: left;
-            background: var(--warning-bg);
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            border: 1px solid #ffeeba;
-            color: var(--warning-text);
-        }
+        .option-btn { background-color: white; border: 2px solid #ddd; color: var(--text-color); text-align: left; padding: 15px; font-size: 1rem; width: 100%; cursor: pointer; transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { background-color: var(--accent-color); border-color: var(--secondary-color); }
+        .option-btn.correct { background-color: #d4edda; border-color: var(--success-color); color: #155724; }
+        .option-btn.incorrect { background-color: #f8d7da; border-color: var(--error-color); color: #721c24; }
+        .feedback-box { margin-top: 1rem; padding: 1rem; border-radius: 5px; background-color: #e2e3e5; border-left: 5px solid var(--primary-color); }
+        .result-card { text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 8px; }
+        .score-display { font-size: 3rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
+        .study-plan-box { text-align: left; background: var(--warning-bg); padding: 15px; border-radius: 5px; margin-top: 15px; border: 1px solid #ffeeba; color: var(--warning-text); }
         
-        .study-plan-box ul {
-            margin-bottom: 0;
-            padding-left: 20px;
-        }
-
-        .study-plan-box li {
-            margin-bottom: 8px;
-        }
-
-        #loading-msg {
-            color: #666;
-            font-style: italic;
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
+        /* Spinner de Carregamento */
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -160,11 +47,17 @@
 <div class="container">
     <header>
         <h1>Avaliação de Conhecimento</h1>
-        <h2>Finanças Públicas: PPA, LDO, LOA e Execução da Despesa</h2>
+        <h2>Finanças Públicas e Orçamento</h2>
     </header>
 
-    <div id="intro-screen" style="text-align: center;">
-        <p>Por favor, identifique-se para iniciar o treinamento.</p>
+    <div id="loading-screen" style="text-align: center;">
+        <div class="loader"></div>
+        <p>Carregando perguntas do banco de dados...</p>
+    </div>
+
+    <div id="intro-screen" class="hidden" style="text-align: center;">
+        <p>Banco de questões carregado com sucesso!</p>
+        <p>Por favor, identifique-se para iniciar.</p>
         <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
         <br>
         <button onclick="startQuiz()">Iniciar Questionário</button>
@@ -196,14 +89,10 @@
             <div class="score-display">
                 <span id="score">0</span>%
             </div>
-            
             <div id="result-message"></div>
-            
-            <p id="loading-msg">Enviando resultados para o sistema...</p>
-            
+            <p id="saving-msg" style="color: #666; font-style: italic;">Enviando resultados...</p>
             <div style="margin-top: 20px;">
                 <button onclick="location.reload()">Refazer Teste</button>
-                <button onclick="window.print()">Imprimir Resultado</button>
             </div>
         </div>
     </div>
@@ -211,97 +100,44 @@
 
 <script>
     // --- CONFIGURAÇÃO ---
-    // URL configurada corretamente
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec'; 
+    // COLE SUA URL AQUI (A MESMA QUE VOCÊ USOU ANTES)
+    const GOOGLE_SCRIPT_URL = 'COLE_SUA_URL_DO_GOOGLE_SCRIPT_AQUI'; 
     // --------------------
 
-    // Guia de Estudo: Mensagens personalizadas por tópico
-    const studyGuides = {
-        "Planejamento": "Revisar os prazos e definições do PPA, LDO e LOA (Hierarquia das leis orçamentárias).",
-        "Empenho": "Estudar as diferenças entre Empenho Ordinário, Global e Estimativo.",
-        "Liquidação": "Rever o conceito de Liquidação (reconhecimento da dívida e verificação da entrega).",
-        "Classificação": "Aprofundar nos níveis da despesa, especialmente Elemento e Subelemento.",
-        "Contingência": "Entender o papel da Reserva de Contingência para riscos fiscais."
-    };
-
-    // Banco de Questões com Tópicos
-    const questions = [
-        { 
-            q: "No contexto do planeamento orçamental, qual instrumento estabelece diretrizes, objetivos e metas regionalizadas para 4 anos?", 
-            options: ["LDO", "LOA", "PPA", "LRF"], 
-            answer: 2, 
-            topic: "Planejamento",
-            rationale: "O PPA (Plano Plurianual) é o instrumento de médio prazo (4 anos) que define as grandes metas estratégicas." 
-        },
-        { 
-            q: "Qual é a função primordial da Lei de Diretrizes Orçamentárias (LDO)?", 
-            options: ["Autorizar despesas diretamente", "Estabelecer metas anuais e orientar a LOA", "Registrar atos contábeis", "Definir orçamento da seguridade"], 
-            answer: 1, 
-            topic: "Planejamento",
-            rationale: "A LDO serve como elo entre o PPA e a LOA, definindo prioridades para o ano seguinte." 
-        },
-        { 
-            q: "Como é definido o empenho do tipo 'Global'?", 
-            options: ["Para despesas de montante incerto", "Para despesas de pagamento único", "Para despesas contratuais parceladas com valor definido", "Para despesas de emergência"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "O Global é usado quando se sabe o valor total (ex: aluguer anual), mas o pagamento é feito em parcelas." 
-        },
-        { 
-            q: "Para despesas variáveis como energia elétrica ou água, qual o empenho adequado?", 
-            options: ["Ordinário", "Global", "Estimativo", "De Liquidação"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "O Estimativo é para casos onde o valor só é conhecido na liquidação, exigindo uma previsão inicial." 
-        },
-        { 
-            q: "Qual é o principal objetivo da fase de 'Liquidação' da despesa?", 
-            options: ["Reservar a dotação", "Fazer a transferência bancária", "Verificar o direito do credor e a entrega do bem/serviço", "Estimar gastos futuros"], 
-            answer: 2, 
-            topic: "Liquidação",
-            rationale: "Liquidação é a conferência: atestar que o serviço foi feito para gerar a obrigação de pagar." 
-        },
-        { 
-            q: "Na classificação da despesa, qual a finalidade do 'Subelemento'?", 
-            options: ["Definir a função de governo", "Identificar a natureza da despesa com detalhe máximo", "Definir se é corrente ou capital", "Autorizar créditos"], 
-            answer: 1, 
-            topic: "Classificação",
-            rationale: "O subelemento detalha exatamente o que está sendo comprado (ex: Papel A4, Gasolina)." 
-        },
-        { 
-            q: "Para que serve a 'Reserva de Contingência' na LOA?", 
-            options: ["Pagamento de pessoal", "Atendimento de passivos e riscos fiscais imprevistos", "Obras de infraestrutura", "Lucro de estatais"], 
-            answer: 1, 
-            topic: "Contingência",
-            rationale: "É uma dotação sem destino específico inicial, guardada para emergências ou imprevistos." 
-        },
-        { 
-            q: "O que caracteriza o 'Empenho Ordinário'?", 
-            options: ["Despesas parceladas", "Despesas de valor incerto", "Despesas de valor fixo e pagamento único", "Despesas sem dotação"], 
-            answer: 2, 
-            topic: "Empenho",
-            rationale: "É usado para compras simples: valor exato conhecido e pago de uma só vez." 
-        },
-        { 
-            q: "O que significa dizer que uma despesa foi 'Liquidada'?", 
-            options: ["O dinheiro saiu da conta", "O Estado reconheceu a dívida após entrega do bem", "Foi planejada no PPA", "Foi cancelada"], 
-            answer: 1, 
-            topic: "Liquidação",
-            rationale: "Significa que a obrigação tornou-se 'líquida e certa' após verificação." 
-        },
-        { 
-            q: "PPA, LDO e LOA são leis de iniciativa de quem?", 
-            options: ["Poder Judiciário", "Poder Legislativo", "Poder Executivo", "Tribunal de Contas"], 
-            answer: 2, 
-            topic: "Planejamento",
-            rationale: "Cabe ao Chefe do Executivo (Prefeito/Governador/Presidente) propor o orçamento." 
-        }
-    ];
-
+    let questions = []; // Array vazio, será preenchido pelo Google Sheets
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
-    let mistakes = new Set(); // Armazena tópicos errados
+    let mistakes = new Set(); 
+
+    // Ao carregar a página, busca as perguntas
+    window.onload = function() {
+        fetchQuestions();
+    };
+
+    function fetchQuestions() {
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
+            alert("Erro: URL do Script não configurada no código HTML.");
+            return;
+        }
+
+        // O 'fetch' aqui usa method GET por padrão, que aciona o doGet no Apps Script
+        fetch(GOOGLE_SCRIPT_URL)
+            .then(response => response.json())
+            .then(data => {
+                questions = data;
+                if(questions.length > 0) {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                    document.getElementById('intro-screen').classList.remove('hidden');
+                } else {
+                    alert("Nenhuma pergunta encontrada na planilha.");
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar perguntas:', error);
+                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro ao carregar perguntas. Verifique sua conexão ou a URL do Script.</p>";
+            });
+    }
 
     function startQuiz() {
         const nameInput = document.getElementById('student-name');
@@ -315,11 +151,9 @@
 
     function loadQuestion() {
         const currentData = questions[currentQuestionIndex];
-        
         document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
         document.getElementById('feedback-container').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
-
         document.getElementById('question-text').innerText = currentData.q;
 
         const optionsContainer = document.getElementById('options-container');
@@ -337,16 +171,17 @@
     function selectOption(selectedIndex, btnElement) {
         const currentData = questions[currentQuestionIndex];
         const buttons = document.querySelectorAll('.option-btn');
-        
         buttons.forEach(btn => btn.disabled = true);
 
-        if (selectedIndex === currentData.answer) {
+        // Converte string para número se necessário, embora o script já envie número
+        const correctAnswer = parseInt(currentData.answer);
+
+        if (selectedIndex === correctAnswer) {
             btnElement.classList.add('correct');
             score++;
         } else {
             btnElement.classList.add('incorrect');
-            buttons[currentData.answer].classList.add('correct');
-            // Registra o erro no tópico
+            buttons[correctAnswer].classList.add('correct');
             mistakes.add(currentData.topic);
         }
 
@@ -368,64 +203,48 @@
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
 
-        const percentage = (score / questions.length) * 100;
+        const percentage = Math.round((score / questions.length) * 100);
         document.getElementById('result-name').innerText = studentName;
         document.getElementById('score').innerText = percentage;
 
-        // Construção do Feedback Visual
         let htmlContent = "";
-        
         if (percentage === 100) {
-            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Você demonstrou domínio total do conteúdo.</p>";
+            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Domínio total.</p>";
         } else {
-            let msg = percentage >= 70 ? "Muito bom! Você tem um bom conhecimento, mas atenção aos detalhes abaixo." : "Bom esforço. Recomendamos revisar os tópicos abaixo para fortalecer seu aprendizado.";
-            
+            let msg = percentage >= 70 ? "Muito bom!" : "Precisa revisar.";
             htmlContent = `<p>${msg}</p>`;
             
-            // Montar o Plano de Estudos
             if (mistakes.size > 0) {
-                htmlContent += `<div class="study-plan-box"><h4>🔍 O que você deve estudar:</h4><ul>`;
+                htmlContent += `<div class="study-plan-box"><h4>🔍 Tópicos para revisar:</h4><ul>`;
                 mistakes.forEach(topic => {
-                    const guide = studyGuides[topic] || "Revisar este conceito.";
-                    htmlContent += `<li><strong>${topic}:</strong> ${guide}</li>`;
+                    htmlContent += `<li>Revisar conceitos de: <strong>${topic}</strong></li>`;
                 });
                 htmlContent += `</ul></div>`;
             }
         }
-
         document.getElementById('result-message').innerHTML = htmlContent;
 
-        // Enviar para o Google Sheets
-        sendToGoogleSheets(studentName, score, percentage + "%");
+        // Enviar resultados de volta para a planilha (usando o doPost)
+        sendResults(studentName, score, percentage + "%", Array.from(mistakes).join(", "));
     }
 
-    function sendToGoogleSheets(nome, acertos, percentual) {
-        const loadingMsg = document.getElementById('loading-msg');
+    function sendResults(nome, acertos, percentual, topicos) {
+        const loadingMsg = document.getElementById('saving-msg');
         
-        // Verifica se a URL está vazia
-        if (!GOOGLE_SCRIPT_URL) {
-            loadingMsg.innerText = "Erro: URL do Google Script não encontrada.";
-            loadingMsg.style.color = "red";
-            return;
-        }
-
-        const data = { nome: nome, acertos: acertos, percentual: percentual };
+        const data = { nome: nome, acertos: acertos, percentual: percentual, topicos: topicos };
 
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors', 
-            headers: {
-                'Content-Type': 'text/plain'
-            },
+            headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(data)
         })
         .then(() => {
-            loadingMsg.innerText = "✅ Resultados salvos no sistema com sucesso!";
+            loadingMsg.innerText = "✅ Resultados salvos com sucesso!";
             loadingMsg.style.color = "green";
         })
         .catch(error => {
-            console.error('Erro:', error);
-            loadingMsg.innerText = "⚠️ Erro ao salvar dados. Verifique sua conexão.";
+            loadingMsg.innerText = "⚠️ Erro ao salvar dados.";
         });
     }
 </script>
