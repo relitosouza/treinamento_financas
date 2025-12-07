@@ -34,6 +34,7 @@
             padding: 2rem;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         header {
@@ -50,7 +51,7 @@
             padding: 10px; font-size: 1rem; width: 70%; margin: 1rem 0; border: 1px solid #ccc; border-radius: 5px;
         }
 
-        /* Estilos dos Botões */
+        /* Botões */
         button {
             background-color: var(--primary-color);
             color: white;
@@ -60,12 +61,13 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s, transform 0.1s;
+            margin: 5px;
         }
 
         button:hover { background-color: var(--secondary-color); transform: translateY(-2px); }
         button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         /* MENU GRID */
         .menu-grid {
@@ -84,17 +86,8 @@
             border: 2px solid var(--primary-color);
         }
 
-        .menu-btn:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .menu-btn.random {
-            grid-column: span 2; /* Ocupa a largura toda */
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-        }
+        .menu-btn:hover { background-color: var(--primary-color); color: white; }
+        .menu-btn.random { grid-column: span 2; background-color: var(--secondary-color); color: white; border: none; }
 
         /* Quiz Styles */
         .question-container { margin-bottom: 1.5rem; }
@@ -119,6 +112,38 @@
             animation: spin 1s linear infinite; margin: 20px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ESTILOS DA APOSTILA (MODAL) */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: white; width: 90%; max-width: 700px; max-height: 85vh;
+            padding: 2rem; border-radius: 10px; overflow-y: auto;
+            position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .close-btn {
+            position: absolute; top: 10px; right: 20px;
+            font-size: 2rem; cursor: pointer; color: #666;
+        }
+        .close-btn:hover { color: var(--error-color); }
+        
+        /* Formatação do texto da apostila */
+        .guide-body h3 { color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-top: 20px; }
+        .guide-body h4 { color: var(--secondary-color); margin-top: 15px; margin-bottom: 5px; }
+        .guide-body ul { padding-left: 20px; margin-bottom: 15px; }
+        .guide-body li { margin-bottom: 5px; line-height: 1.5; }
+        .guide-body p { line-height: 1.6; text-align: justify; }
+
+        @media print {
+            body * { visibility: hidden; }
+            .modal-content, .modal-content * { visibility: visible; }
+            .modal { position: absolute; left: 0; top: 0; background: white; }
+            .modal-content { width: 100%; max-width: 100%; box-shadow: none; }
+            .no-print { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -180,10 +205,26 @@
                 <span id="score">0</span>%
             </div>
             <div id="result-message"></div>
-            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Salvando resultados...</p>
-            <div style="margin-top: 20px;">
-                <button onclick="location.reload()">Escolher Outro Módulo</button>
+            
+            <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button id="btn-guide" onclick="openStudyGuide()" style="background-color: var(--secondary-color); width: 100%;">📖 Ler Resumo do Módulo</button>
+                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                    <button onclick="location.reload()">Escolher Outro Módulo</button>
+                </div>
             </div>
+            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Salvando resultados...</p>
+        </div>
+    </div>
+</div>
+
+<div id="study-modal" class="hidden modal">
+    <div class="modal-content">
+        <span class="close-btn no-print" onclick="closeStudyGuide()">&times;</span>
+        <div id="guide-content" class="guide-body">
+            </div>
+        <div class="no-print" style="text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px;">
+            <button onclick="window.print()" style="background-color: #666;">🖨️ Imprimir Resumo</button>
+            <button onclick="closeStudyGuide()">Fechar</button>
         </div>
     </div>
 </div>
@@ -194,87 +235,135 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZreiAf6-TvqZulPZGNT5lxNNPkR6nlCTLonu-aKa7wdpo2W959zi2IhOllZWzkacH/exec'; 
     // ==========================================================
 
-    let allQuestionsData = []; // Armazena TODAS as perguntas baixadas
-    let currentQuizQuestions = []; // Armazena apenas as 10 do teste atual
+    // CONTEÚDO DAS APOSTILAS
+    const studyMaterials = {
+        'planejamento': `
+            <h2 style="text-align:center; color:#003366;">📘 Resumo: Planejamento e Princípios</h2>
+            <h3>1. A Tríade Orçamentária</h3>
+            <p>No Brasil, o orçamento é definido por três leis de iniciativa do Poder Executivo:</p>
+            <ul>
+                <li><strong>PPA (Plano Plurianual):</strong> Planejamento estratégico de médio prazo. Define diretrizes, objetivos e metas para <strong>4 anos</strong>.</li>
+                <li><strong>LDO (Lei de Diretrizes Orçamentárias):</strong> Elo entre o planejamento e a execução. Define metas e prioridades para o ano seguinte e orienta a LOA.</li>
+                <li><strong>LOA (Lei Orçamentária Anual):</strong> O orçamento propriamente dito. Estima a receita e fixa a despesa para 1 ano.</li>
+            </ul>
+            <h3>2. Princípios Orçamentários</h3>
+            <ul>
+                <li><strong>Unidade:</strong> O orçamento deve ser um só para cada ente.</li>
+                <li><strong>Universalidade:</strong> Todas as receitas e despesas devem constar no orçamento.</li>
+                <li><strong>Anualidade:</strong> O orçamento vale para o exercício financeiro (1 jan a 31 dez).</li>
+                <li><strong>Exclusividade:</strong> A LOA não conterá "matéria estranha", exceto créditos suplementares e operações de crédito.</li>
+            </ul>`,
+        
+        'orcamento': `
+            <h2 style="text-align:center; color:#003366;">📙 Resumo: Execução Orçamentária</h2>
+            <h3>1. Estágios da Despesa</h3>
+            <ul>
+                <li><strong>Fixação:</strong> Na aprovação da lei.</li>
+                <li><strong>Empenho:</strong> Reserva do recurso. Cria a obrigação para o Estado. (Vedado despesa sem prévio empenho).</li>
+                <li><strong>Liquidação:</strong> Verificação do direito do credor (conferência da entrega do bem/serviço).</li>
+                <li><strong>Pagamento:</strong> Entrega do numerário.</li>
+            </ul>
+            <h3>2. Tipos de Empenho</h3>
+            <ul>
+                <li><strong>Ordinário:</strong> Valor fixo e pagamento único.</li>
+                <li><strong>Global:</strong> Valor conhecido, pagamento parcelado (ex: aluguel).</li>
+                <li><strong>Estimativo:</strong> Valor incerto (ex: conta de luz).</li>
+            </ul>
+            <h3>3. Restos a Pagar</h3>
+            <p>Despesas empenhadas mas não pagas até 31/dez.</p>
+            <ul>
+                <li><strong>Processados:</strong> Já liquidados (serviço feito).</li>
+                <li><strong>Não Processados:</strong> Apenas empenhados.</li>
+            </ul>`,
+
+        'contabilidade': `
+            <h2 style="text-align:center; color:#003366;">📗 Resumo: Contabilidade Pública</h2>
+            <h3>1. Regimes Contábeis</h3>
+            <ul>
+                <li><strong>Orçamentário:</strong> Misto (Caixa para Receita, Competência para Despesa).</li>
+                <li><strong>Patrimonial:</strong> Competência total (reconhece VPA e VPD pelo fato gerador).</li>
+            </ul>
+            <h3>2. Demonstrações (MCASP)</h3>
+            <ul>
+                <li><strong>Balanço Orçamentário:</strong> Previsto vs. Executado.</li>
+                <li><strong>Balanço Patrimonial:</strong> Ativos e Passivos (Financeiros e Permanentes).</li>
+                <li><strong>Superávit Financeiro:</strong> Ativo Financeiro (-) Passivo Financeiro.</li>
+            </ul>
+            <h3>3. LRF e Dívida</h3>
+            <ul>
+                <li><strong>Regra de Ouro:</strong> Proibido se endividar (Operação de Crédito) para pagar despesa corrente, exceto investimento.</li>
+                <li><strong>Dívida Flutuante:</strong> Curto prazo (ex: Restos a Pagar).</li>
+                <li><strong>Dívida Fundada:</strong> Longo prazo (exige lei).</li>
+            </ul>`,
+            
+        'aleatorio': `
+            <h2 style="text-align:center; color:#003366;">🎲 Resumo Geral (Mix)</h2>
+            <p>Você realizou um teste com tópicos mistos. Abaixo, os pontos chave de cada área:</p>
+            <h4>Planejamento</h4>
+            <p>Lembre-se da hierarquia: PPA (4 anos) > LDO (Metas Anuais) > LOA (Execução).</p>
+            <h4>Execução</h4>
+            <p>A ordem obrigatória é: Empenho > Liquidação > Pagamento. Jamais pague sem liquidar!</p>
+            <h4>Contabilidade</h4>
+            <p>O foco atual é o enfoque Patrimonial (reconhecer depreciação, ativos e passivos independente do orçamento).</p>
+            <p><em>Para um estudo mais aprofundado, sugerimos realizar os módulos específicos individualmente.</em></p>`
+    };
+
+    let allQuestionsData = [];
+    let currentQuizQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
     let selectedModule = "";
     let mistakes = new Set();
 
-    // Mapeamento: Quais tópicos da planilha pertencem a qual botão
     const topicGroups = {
         'planejamento': ['Planejamento', 'Ciclo Orçamentário', 'Princípios', 'LDO', 'PPA', 'LOA'],
-        'orcamento': ['Empenho', 'Liquidação', 'Pagamento', 'Despesa', 'Receita', 'Classificação', 'Créditos', 'Dívida'],
-        'contabilidade': ['Contabilidade', 'PCASP', 'Demonstrações', 'Patrimônio', 'LRF']
+        'orcamento': ['Empenho', 'Liquidação', 'Pagamento', 'Despesa', 'Receita', 'Classificação', 'Créditos', 'Dívida', 'Suprimento'],
+        'contabilidade': ['Contabilidade', 'PCASP', 'Demonstrações', 'Patrimônio', 'LRF', 'Balanço']
     };
 
-    window.onload = function() {
-        fetchQuestions();
-    };
+    window.onload = function() { fetchQuestions(); };
 
     function fetchQuestions() {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
-            alert("Erro: URL do Script não configurada.");
-            return;
+            alert("Erro: URL do Script não configurada."); return;
         }
-
-        fetch(GOOGLE_SCRIPT_URL)
-            .then(response => response.json())
-            .then(data => {
-                allQuestionsData = data; // Guarda tudo na memória
-                
-                if(allQuestionsData.length > 0) {
-                    document.getElementById('loading-screen').classList.add('hidden');
-                    document.getElementById('menu-screen').classList.remove('hidden'); // Mostra o Menu
-                    document.getElementById('subtitle').innerText = "Selecione um módulo";
-                } else {
-                    alert("A planilha está vazia.");
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro de conexão.</p>";
-            });
+        fetch(GOOGLE_SCRIPT_URL).then(r => r.json()).then(data => {
+            allQuestionsData = data;
+            if(allQuestionsData.length > 0) {
+                document.getElementById('loading-screen').classList.add('hidden');
+                document.getElementById('menu-screen').classList.remove('hidden');
+                document.getElementById('subtitle').innerText = "Selecione um módulo";
+            } else { alert("A planilha está vazia."); }
+        }).catch(e => { document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro de conexão.</p>"; });
     }
 
-    // Função que filtra as perguntas baseada no botão clicado
     function selectCategory(category) {
         selectedModule = category;
         let filteredQuestions = [];
 
         if (category === 'aleatorio') {
-            filteredQuestions = [...allQuestionsData]; // Copia todas
+            filteredQuestions = [...allQuestionsData];
             document.getElementById('selected-theme-display').innerText = "Aleatório Geral";
         } else {
-            // Filtra as perguntas cujo tópico esteja na lista do grupo
             const allowedTopics = topicGroups[category];
             filteredQuestions = allQuestionsData.filter(q => {
-                // Verifica se o tópico da pergunta (q.topic) está incluso na lista do grupo
-                // Usa .some para verificar correspondência parcial ou exata
                 return allowedTopics.some(t => q.topic && q.topic.includes(t));
             });
-            
-            // Texto bonito para exibir
             const names = {'planejamento': 'Planejamento', 'orcamento': 'Orçamento e Pagamento', 'contabilidade': 'Contabilidade'};
             document.getElementById('selected-theme-display').innerText = names[category];
         }
 
         if (filteredQuestions.length === 0) {
-            alert("Não encontramos perguntas para este tema na planilha. Verifique se a coluna 'Tópico' está preenchida corretamente (ex: Planejamento, Empenho, Contabilidade).");
-            return;
+            alert("Não há perguntas suficientes para este tema."); return;
         }
 
-        // Embaralha as perguntas filtradas
         for (let i = filteredQuestions.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [filteredQuestions[i], filteredQuestions[j]] = [filteredQuestions[j], filteredQuestions[i]];
         }
 
-        // Pega no máximo 10
         currentQuizQuestions = filteredQuestions.slice(0, 10);
-
-        // Muda a tela
         document.getElementById('menu-screen').classList.add('hidden');
         document.getElementById('intro-screen').classList.remove('hidden');
         document.getElementById('subtitle').innerText = "Identificação";
@@ -282,14 +371,12 @@
 
     function startQuiz() {
         const nameInput = document.getElementById('student-name');
-        if (nameInput.value.trim() === "") { alert("Por favor, digite seu nome."); return; }
+        if (nameInput.value.trim() === "") { alert("Digite seu nome."); return; }
         studentName = nameInput.value;
-        
         document.getElementById('intro-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.remove('hidden');
         document.getElementById('subtitle').innerText = "Em progresso...";
         document.getElementById('total-q-num').innerText = currentQuizQuestions.length;
-        
         loadQuestion();
     }
 
@@ -299,10 +386,8 @@
         document.getElementById('feedback-container').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
         document.getElementById('question-text').innerText = currentData.q;
-
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = ''; 
-
         currentData.options.forEach((opt, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
@@ -312,81 +397,61 @@
         });
     }
 
-    function selectOption(selectedIndex, btnElement) {
-        const currentData = currentQuizQuestions[currentQuestionIndex];
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons.forEach(btn => btn.disabled = true);
-
-        const correctAnswer = parseInt(currentData.answer);
-
-        if (selectedIndex === correctAnswer) {
-            btnElement.classList.add('correct');
-            score++;
-        } else {
-            btnElement.classList.add('incorrect');
-            buttons[correctAnswer].classList.add('correct');
-            if(currentData.topic) mistakes.add(currentData.topic);
+    function selectOption(idx, btn) {
+        const data = currentQuizQuestions[currentQuestionIndex];
+        document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+        const correct = parseInt(data.answer);
+        if (idx === correct) { btn.classList.add('correct'); score++; }
+        else { 
+            btn.classList.add('incorrect'); 
+            document.querySelectorAll('.option-btn')[correct].classList.add('correct');
+            if(data.topic) mistakes.add(data.topic);
         }
-
-        document.getElementById('feedback-text').innerText = currentData.rationale;
+        document.getElementById('feedback-text').innerText = data.rationale;
         document.getElementById('feedback-container').classList.remove('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < currentQuizQuestions.length) {
-            loadQuestion();
-        } else {
-            showResults();
-        }
+        if (currentQuestionIndex < currentQuizQuestions.length) loadQuestion();
+        else showResults();
     }
 
     function showResults() {
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
         document.getElementById('subtitle').innerText = "Concluído";
-
-        const percentage = Math.round((score / currentQuizQuestions.length) * 100);
+        const pct = Math.round((score / currentQuizQuestions.length) * 100);
         document.getElementById('result-name').innerText = studentName;
         document.getElementById('result-module').innerText = document.getElementById('selected-theme-display').innerText;
-        document.getElementById('score').innerText = percentage;
-
-        let htmlContent = "";
-        if (percentage >= 70) {
-            htmlContent = "<p style='color:#28a745'><strong>Aprovado!</strong> Ótimo desempenho.</p>";
-        } else {
-            htmlContent = "<p style='color:#dc3545'><strong>Precisa Melhorar.</strong> Revise os tópicos abaixo.</p>";
-        }
+        document.getElementById('score').innerText = pct;
         
-        if (mistakes.size > 0) {
-            htmlContent += `<div style="text-align:left; background:#fff3cd; padding:10px; margin-top:10px; border-radius:5px;"><strong>Revisar:</strong> ${Array.from(mistakes).join(", ")}</div>`;
-        }
-        
-        document.getElementById('result-message').innerHTML = htmlContent;
+        let msg = pct >= 70 ? "<p style='color:#28a745'><strong>Aprovado!</strong></p>" : "<p style='color:#dc3545'><strong>Continue estudando.</strong></p>";
+        if (mistakes.size > 0) msg += `<div style="text-align:left; background:#fff3cd; padding:10px; border-radius:5px;"><strong>Revisar:</strong> ${Array.from(mistakes).join(", ")}</div>`;
+        document.getElementById('result-message').innerHTML = msg;
 
-        // Salvar com nome do módulo
-        sendResults(studentName, score, percentage + "%", Array.from(mistakes).join(", "), selectedModule);
+        sendResults(studentName, score, pct + "%", Array.from(mistakes).join(", "), selectedModule);
     }
+
+    // --- LÓGICA DA APOSTILA ---
+    function openStudyGuide() {
+        const content = studyMaterials[selectedModule] || studyMaterials['aleatorio'];
+        document.getElementById('guide-content').innerHTML = content;
+        document.getElementById('study-modal').classList.remove('hidden');
+    }
+
+    function closeStudyGuide() {
+        document.getElementById('study-modal').classList.add('hidden');
+    }
+    // --------------------------
 
     function sendResults(nome, acertos, percentual, topicos, modulo) {
         const loadingMsg = document.getElementById('saving-msg');
-        
-        // Adicionamos o módulo nos dados enviados (embora a planilha atual só tenha 4 colunas, não quebrará o código)
         const data = { nome: nome, acertos: acertos, percentual: percentual, topicos: topicos, modulo: modulo };
-
-        fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST', mode: 'no-cors', 
-            headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(data)
-        })
-        .then(() => {
-            loadingMsg.innerText = "✅ Resultados salvos!";
-            loadingMsg.style.color = "green";
-        })
-        .catch(error => {
-            loadingMsg.innerText = "⚠️ Erro ao salvar.";
-        });
+        fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(data) })
+        .then(() => { loadingMsg.innerText = "✅ Resultados salvos!"; loadingMsg.style.color = "green"; })
+        .catch(() => { loadingMsg.innerText = "⚠️ Erro ao salvar."; });
     }
 </script>
 
