@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinamento: Administração Pública e Orçamento</title>
+    <title>Treinamento Modular: Adm Pública</title>
     <style>
         :root {
-            --primary-color: #003366; /* Azul Escuro */
+            --primary-color: #003366;
             --secondary-color: #005b96;
             --accent-color: #f0f0f0;
             --success-color: #28a745;
@@ -47,14 +47,10 @@
         h2 { font-size: 1.2rem; color: #666; font-weight: normal; }
 
         input[type="text"] {
-            padding: 10px;
-            font-size: 1rem;
-            width: 70%;
-            margin: 1rem 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 10px; font-size: 1rem; width: 70%; margin: 1rem 0; border: 1px solid #ccc; border-radius: 5px;
         }
 
+        /* Estilos dos Botões */
         button {
             background-color: var(--primary-color);
             color: white;
@@ -63,70 +59,64 @@
             font-size: 1rem;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.1s;
         }
 
-        button:hover { background-color: var(--secondary-color); }
-        button:disabled { background-color: #ccc; cursor: not-allowed; }
+        button:hover { background-color: var(--secondary-color); transform: translateY(-2px); }
+        button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
 
         .hidden { display: none; }
 
+        /* MENU GRID */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .menu-btn {
+            padding: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .menu-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .menu-btn.random {
+            grid-column: span 2; /* Ocupa a largura toda */
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+        }
+
+        /* Quiz Styles */
         .question-container { margin-bottom: 1.5rem; }
         .question-text { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; }
-
         .options-grid { display: grid; gap: 10px; }
-
+        
         .option-btn {
-            background-color: white;
-            border: 2px solid #ddd;
-            color: var(--text-color);
-            text-align: left;
-            padding: 15px;
-            font-size: 1rem;
-            width: 100%;
-            cursor: pointer;
-            transition: all 0.2s;
+            background-color: white; border: 2px solid #ddd; color: var(--text-color);
+            text-align: left; padding: 15px; font-size: 1rem; width: 100%; cursor: pointer;
         }
-
-        .option-btn:hover:not(:disabled) {
-            background-color: var(--accent-color);
-            border-color: var(--secondary-color);
-        }
-
+        .option-btn:hover:not(:disabled) { background-color: var(--accent-color); border-color: var(--secondary-color); }
         .option-btn.correct { background-color: #d4edda; border-color: var(--success-color); color: #155724; }
         .option-btn.incorrect { background-color: #f8d7da; border-color: var(--error-color); color: #721c24; }
 
-        .feedback-box {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 5px;
-            background-color: #e2e3e5;
-            border-left: 5px solid var(--primary-color);
-        }
-
-        /* Resultados */
+        .feedback-box { margin-top: 1rem; padding: 1rem; border-radius: 5px; background-color: #e2e3e5; border-left: 5px solid var(--primary-color); }
         .result-card { text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 8px; }
         .score-display { font-size: 3rem; font-weight: bold; color: var(--primary-color); margin: 1rem 0; }
         
-        .study-plan-box {
-            text-align: left;
-            background: var(--warning-bg);
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            border: 1px solid #ffeeba;
-            color: var(--warning-text);
-        }
-
-        /* Loading Spinner */
         .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+            border: 5px solid #f3f3f3; border-top: 5px solid var(--primary-color);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite; margin: 20px auto;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -135,37 +125,47 @@
 
 <div class="container">
     <header>
-        <h1>Avaliação de Conhecimento</h1>
-        <h2>Finanças Públicas e Orçamento</h2>
+        <h1>Treinamento de Gestão Pública</h1>
+        <h2 id="subtitle">Carregando módulos...</h2>
     </header>
 
     <div id="loading-screen" style="text-align: center;">
         <div class="loader"></div>
-        <p>Acessando banco de questões e sorteando perguntas...</p>
+        <p>Conectando ao banco de dados...</p>
+    </div>
+
+    <div id="menu-screen" class="hidden" style="text-align: center;">
+        <p>Escolha o tema que deseja treinar hoje:</p>
+        <div class="menu-grid">
+            <button class="menu-btn" onclick="selectCategory('planejamento')">📅 Planejamento (PPA/LDO/LOA)</button>
+            <button class="menu-btn" onclick="selectCategory('orcamento')">💰 Orçamento e Pagamento</button>
+            <button class="menu-btn" onclick="selectCategory('contabilidade')">📊 Contabilidade Pública</button>
+            <button class="menu-btn random" onclick="selectCategory('aleatorio')">🎲 Modo Aleatório (Misturado)</button>
+        </div>
     </div>
 
     <div id="intro-screen" class="hidden" style="text-align: center;">
-        <p><strong>10 perguntas sorteadas com sucesso!</strong></p>
-        <p>Por favor, identifique-se para iniciar.</p>
+        <p>Tema selecionado: <strong id="selected-theme-display"></strong></p>
+        <p>Total de questões: <strong>10</strong></p>
+        <br>
         <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
         <br>
         <button onclick="startQuiz()">Iniciar Questionário</button>
+        <br><br>
+        <button onclick="location.reload()" style="background-color: #666; font-size: 0.8rem;">Voltar ao Menu</button>
     </div>
 
     <div id="quiz-screen" class="hidden">
         <div style="margin-bottom: 10px; text-align: right; color: #666;">
             Questão <span id="current-q-num">1</span> de <span id="total-q-num">10</span>
         </div>
-        
         <div class="question-container">
             <div id="question-text" class="question-text"></div>
             <div id="options-container" class="options-grid"></div>
         </div>
-
         <div id="feedback-container" class="hidden feedback-box">
             <strong>Explicação:</strong> <span id="feedback-text"></span>
         </div>
-
         <div style="text-align: right; margin-top: 1rem;">
             <button id="next-btn" class="hidden" onclick="nextQuestion()">Próxima Pergunta</button>
         </div>
@@ -175,17 +175,14 @@
         <div class="result-card">
             <h3>Resultado Final</h3>
             <p>Participante: <strong id="result-name"></strong></p>
+            <p>Módulo: <strong id="result-module"></strong></p>
             <div class="score-display">
                 <span id="score">0</span>%
             </div>
-            
             <div id="result-message"></div>
-            
-            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Enviando resultados para o banco de dados...</p>
-            
+            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Salvando resultados...</p>
             <div style="margin-top: 20px;">
-                <button onclick="location.reload()">Refazer Teste (Novo Sorteio)</button>
-                <button onclick="window.print()">Imprimir</button>
+                <button onclick="location.reload()">Escolher Outro Módulo</button>
             </div>
         </div>
     </div>
@@ -193,70 +190,111 @@
 
 <script>
     // ==========================================================
-    // CONFIGURAÇÃO: COLE SUA URL DO GOOGLE APPS SCRIPT ABAIXO
-    // ==========================================================
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZreiAf6-TvqZulPZGNT5lxNNPkR6nlCTLonu-aKa7wdpo2W959zi2IhOllZWzkacH/exec';
+    // COLE SUA URL AQUI
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyZreiAf6-TvqZulPZGNT5lxNNPkR6nlCTLonu-aKa7wdpo2W959zi2IhOllZWzkacH/exec'; 
     // ==========================================================
 
-    let questions = []; 
+    let allQuestionsData = []; // Armazena TODAS as perguntas baixadas
+    let currentQuizQuestions = []; // Armazena apenas as 10 do teste atual
     let currentQuestionIndex = 0;
     let score = 0;
     let studentName = "";
-    let mistakes = new Set(); 
+    let selectedModule = "";
+    let mistakes = new Set();
 
-    // Ao carregar a página, busca as perguntas e faz o sorteio
+    // Mapeamento: Quais tópicos da planilha pertencem a qual botão
+    const topicGroups = {
+        'planejamento': ['Planejamento', 'Ciclo Orçamentário', 'Princípios', 'LDO', 'PPA', 'LOA'],
+        'orcamento': ['Empenho', 'Liquidação', 'Pagamento', 'Despesa', 'Receita', 'Classificação', 'Créditos', 'Dívida'],
+        'contabilidade': ['Contabilidade', 'PCASP', 'Demonstrações', 'Patrimônio', 'LRF']
+    };
+
     window.onload = function() {
         fetchQuestions();
     };
 
     function fetchQuestions() {
         if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
-            alert("ATENÇÃO: Você precisa editar o arquivo HTML e colar a URL do seu Google Script na linha 155.");
+            alert("Erro: URL do Script não configurada.");
             return;
         }
 
         fetch(GOOGLE_SCRIPT_URL)
             .then(response => response.json())
             .then(data => {
-                // Lógica de Embaralhamento (Shuffle)
-                let allQuestions = data;
+                allQuestionsData = data; // Guarda tudo na memória
                 
-                // Algoritmo Fisher-Yates para misturar o array
-                for (let i = allQuestions.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [allQuestions[i], allQuestions[j]] = [allQuestions[j], allQuestions[i]];
-                }
-
-                // Pega apenas as 10 primeiras após misturar
-                // Se a planilha tiver menos de 10, pega todas as disponíveis
-                const maxQuestions = Math.min(10, allQuestions.length);
-                questions = allQuestions.slice(0, maxQuestions);
-
-                if(questions.length > 0) {
+                if(allQuestionsData.length > 0) {
                     document.getElementById('loading-screen').classList.add('hidden');
-                    document.getElementById('intro-screen').classList.remove('hidden');
-                    document.getElementById('total-q-num').innerText = questions.length;
+                    document.getElementById('menu-screen').classList.remove('hidden'); // Mostra o Menu
+                    document.getElementById('subtitle').innerText = "Selecione um módulo";
                 } else {
-                    alert("A planilha está vazia ou não foi encontrada.");
+                    alert("A planilha está vazia.");
                 }
             })
             .catch(error => {
-                console.error('Erro:', error);
-                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro de conexão. Verifique se a URL do Script está correta e se você tem internet.</p>";
+                console.error(error);
+                document.getElementById('loading-screen').innerHTML = "<p style='color:red'>Erro de conexão.</p>";
             });
+    }
+
+    // Função que filtra as perguntas baseada no botão clicado
+    function selectCategory(category) {
+        selectedModule = category;
+        let filteredQuestions = [];
+
+        if (category === 'aleatorio') {
+            filteredQuestions = [...allQuestionsData]; // Copia todas
+            document.getElementById('selected-theme-display').innerText = "Aleatório Geral";
+        } else {
+            // Filtra as perguntas cujo tópico esteja na lista do grupo
+            const allowedTopics = topicGroups[category];
+            filteredQuestions = allQuestionsData.filter(q => {
+                // Verifica se o tópico da pergunta (q.topic) está incluso na lista do grupo
+                // Usa .some para verificar correspondência parcial ou exata
+                return allowedTopics.some(t => q.topic && q.topic.includes(t));
+            });
+            
+            // Texto bonito para exibir
+            const names = {'planejamento': 'Planejamento', 'orcamento': 'Orçamento e Pagamento', 'contabilidade': 'Contabilidade'};
+            document.getElementById('selected-theme-display').innerText = names[category];
+        }
+
+        if (filteredQuestions.length === 0) {
+            alert("Não encontramos perguntas para este tema na planilha. Verifique se a coluna 'Tópico' está preenchida corretamente (ex: Planejamento, Empenho, Contabilidade).");
+            return;
+        }
+
+        // Embaralha as perguntas filtradas
+        for (let i = filteredQuestions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [filteredQuestions[i], filteredQuestions[j]] = [filteredQuestions[j], filteredQuestions[i]];
+        }
+
+        // Pega no máximo 10
+        currentQuizQuestions = filteredQuestions.slice(0, 10);
+
+        // Muda a tela
+        document.getElementById('menu-screen').classList.add('hidden');
+        document.getElementById('intro-screen').classList.remove('hidden');
+        document.getElementById('subtitle').innerText = "Identificação";
     }
 
     function startQuiz() {
         const nameInput = document.getElementById('student-name');
         if (nameInput.value.trim() === "") { alert("Por favor, digite seu nome."); return; }
         studentName = nameInput.value;
+        
         document.getElementById('intro-screen').classList.add('hidden');
         document.getElementById('quiz-screen').classList.remove('hidden');
+        document.getElementById('subtitle').innerText = "Em progresso...";
+        document.getElementById('total-q-num').innerText = currentQuizQuestions.length;
+        
         loadQuestion();
     }
 
     function loadQuestion() {
-        const currentData = questions[currentQuestionIndex];
+        const currentData = currentQuizQuestions[currentQuestionIndex];
         document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
         document.getElementById('feedback-container').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
@@ -275,11 +313,10 @@
     }
 
     function selectOption(selectedIndex, btnElement) {
-        const currentData = questions[currentQuestionIndex];
+        const currentData = currentQuizQuestions[currentQuestionIndex];
         const buttons = document.querySelectorAll('.option-btn');
         buttons.forEach(btn => btn.disabled = true);
 
-        // Garante que a resposta seja tratada como número
         const correctAnswer = parseInt(currentData.answer);
 
         if (selectedIndex === correctAnswer) {
@@ -288,10 +325,7 @@
         } else {
             btnElement.classList.add('incorrect');
             buttons[correctAnswer].classList.add('correct');
-            // Adiciona o tópico à lista de erros (se existir)
-            if(currentData.topic) {
-                mistakes.add(currentData.topic);
-            }
+            if(currentData.topic) mistakes.add(currentData.topic);
         }
 
         document.getElementById('feedback-text').innerText = currentData.rationale;
@@ -301,7 +335,7 @@
 
     function nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < questions.length) {
+        if (currentQuestionIndex < currentQuizQuestions.length) {
             loadQuestion();
         } else {
             showResults();
@@ -311,51 +345,47 @@
     function showResults() {
         document.getElementById('quiz-screen').classList.add('hidden');
         document.getElementById('result-screen').classList.remove('hidden');
+        document.getElementById('subtitle').innerText = "Concluído";
 
-        const percentage = Math.round((score / questions.length) * 100);
+        const percentage = Math.round((score / currentQuizQuestions.length) * 100);
         document.getElementById('result-name').innerText = studentName;
+        document.getElementById('result-module').innerText = document.getElementById('selected-theme-display').innerText;
         document.getElementById('score').innerText = percentage;
 
         let htmlContent = "";
-        if (percentage === 100) {
-            htmlContent = "<p style='color:#28a745; font-size:1.1rem;'><strong>Parabéns!</strong> Você dominou este teste.</p>";
+        if (percentage >= 70) {
+            htmlContent = "<p style='color:#28a745'><strong>Aprovado!</strong> Ótimo desempenho.</p>";
         } else {
-            let msg = percentage >= 70 ? "Muito bom! Continue estudando." : "Recomendamos revisar o conteúdo.";
-            htmlContent = `<p>${msg}</p>`;
-            
-            // Plano de Estudo Dinâmico
-            if (mistakes.size > 0) {
-                htmlContent += `<div class="study-plan-box"><h4>🔍 Tópicos para revisar:</h4><ul>`;
-                mistakes.forEach(topic => {
-                    htmlContent += `<li>Rever conceitos sobre: <strong>${topic}</strong></li>`;
-                });
-                htmlContent += `</ul></div>`;
-            }
+            htmlContent = "<p style='color:#dc3545'><strong>Precisa Melhorar.</strong> Revise os tópicos abaixo.</p>";
         }
+        
+        if (mistakes.size > 0) {
+            htmlContent += `<div style="text-align:left; background:#fff3cd; padding:10px; margin-top:10px; border-radius:5px;"><strong>Revisar:</strong> ${Array.from(mistakes).join(", ")}</div>`;
+        }
+        
         document.getElementById('result-message').innerHTML = htmlContent;
 
-        // Salvar no Google Sheets
-        sendResults(studentName, score, percentage + "%", Array.from(mistakes).join(", "));
+        // Salvar com nome do módulo
+        sendResults(studentName, score, percentage + "%", Array.from(mistakes).join(", "), selectedModule);
     }
 
-    function sendResults(nome, acertos, percentual, topicos) {
+    function sendResults(nome, acertos, percentual, topicos, modulo) {
         const loadingMsg = document.getElementById('saving-msg');
         
-        const data = { nome: nome, acertos: acertos, percentual: percentual, topicos: topicos };
+        // Adicionamos o módulo nos dados enviados (embora a planilha atual só tenha 4 colunas, não quebrará o código)
+        const data = { nome: nome, acertos: acertos, percentual: percentual, topicos: topicos, modulo: modulo };
 
         fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', 
+            method: 'POST', mode: 'no-cors', 
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(data)
         })
         .then(() => {
-            loadingMsg.innerText = "✅ Resultados salvos com sucesso!";
+            loadingMsg.innerText = "✅ Resultados salvos!";
             loadingMsg.style.color = "green";
         })
         .catch(error => {
-            console.error(error);
-            loadingMsg.innerText = "⚠️ Erro ao salvar dados. Verifique a conexão.";
+            loadingMsg.innerText = "⚠️ Erro ao salvar.";
         });
     }
 </script>
