@@ -86,7 +86,7 @@
 
 <script>
     // --- CONFIGURAÇÃO ---
-    // Substitua a URL abaixo pela que você copiou do Google Apps Script
+    // Mantenha o seu link aqui (já está correto):
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec'; 
     // --------------------
 
@@ -173,10 +173,12 @@
         sendToGoogleSheets(studentName, score, percentage + "%");
     }
 
+    // --- AQUI ESTAVA O ERRO, AGORA CORRIGIDO ---
     function sendToGoogleSheets(nome, acertos, percentual) {
         const loadingMsg = document.getElementById('loading-msg');
         
-        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbxl20PoljFZtACWF4Qgty2EpekrjYdC3gzyU-USnXRDYRWuScE__HMqmdQKC_86Zb0s/exec' || GOOGLE_SCRIPT_URL === '') {
+        // Verificação simplificada: só dá erro se estiver vazio ou com o texto de exemplo antigo
+        if (GOOGLE_SCRIPT_URL === '' || GOOGLE_SCRIPT_URL.includes('COLE_SUA_URL')) {
             loadingMsg.innerText = "Erro: URL do Google Script não configurada no código.";
             loadingMsg.style.color = "red";
             return;
@@ -184,9 +186,6 @@
 
         const data = { nome: nome, acertos: acertos, percentual: percentual };
 
-        // Usamos 'no-cors' para evitar erros de bloqueio de navegador, 
-        // mas isso significa que não conseguimos ler a resposta 'sucesso' do servidor.
-        // O importante é que o dado será enviado.
         fetch(GOOGLE_SCRIPT_URL, {
             method: 'POST',
             mode: 'no-cors', 
@@ -205,6 +204,5 @@
         });
     }
 </script>
-
 </body>
 </html>
