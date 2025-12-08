@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinamento Modular: Adm Pública</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Treinamento de Gestão Pública</h1>
+        <h2 id="subtitle">Carregando módulos...</h2>
+    </header>
+
+    <div id="loading-screen" style="text-align: center;">
+        <div class="loader"></div>
+        <p>Conectando ao banco de dados...</p>
+    </div>
+
+    <div id="menu-screen" class="hidden" style="text-align: center;">
+        <p>Escolha o tema que deseja treinar hoje:</p>
+        <div class="menu-grid">
+            <button class="menu-btn" onclick="selectCategory('planejamento')">📅 Planejamento (PPA/LDO/LOA)</button>
+            <button class="menu-btn" onclick="selectCategory('orcamento')">💰 Orçamento e Pagamento</button>
+            <button class="menu-btn" onclick="selectCategory('contabilidade')">📊 Contabilidade Pública</button>
+            <button class="menu-btn random" onclick="selectCategory('aleatorio')">🎲 Modo Aleatório (Misturado)</button>
+        </div>
+    </div>
+
+    <div id="intro-screen" class="hidden" style="text-align: center;">
+        <p>Tema selecionado: <strong id="selected-theme-display"></strong></p>
+        <p>Total de questões: <strong>10</strong></p>
+        <br>
+        <input type="text" id="student-name" placeholder="Digite seu nome completo..." required>
+        <br>
+        <button onclick="startQuiz()">Iniciar Questionário</button>
+        <br><br>
+        <button onclick="location.reload()" style="background-color: #666; font-size: 0.8rem;">Voltar ao Menu</button>
+    </div>
+
+    <div id="quiz-screen" class="hidden">
+        <div style="margin-bottom: 10px; text-align: right; color: #666;">
+            Questão <span id="current-q-num">1</span> de <span id="total-q-num">10</span>
+        </div>
+        <div class="question-container">
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-grid"></div>
+        </div>
+        <div id="feedback-container" class="hidden feedback-box">
+            <strong>Explicação:</strong> <span id="feedback-text"></span>
+        </div>
+        <div style="text-align: right; margin-top: 1rem;">
+            <button id="next-btn" class="hidden" onclick="nextQuestion()">Próxima Pergunta</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <div class="result-card">
+            <h3>Resultado Final</h3>
+            <p>Participante: <strong id="result-name"></strong></p>
+            <p>Módulo: <strong id="result-module"></strong></p>
+            <div class="score-display">
+                <span id="score">0</span>%
+            </div>
+            <div id="result-message"></div>
+            
+            <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
+                <button id="btn-guide" onclick="openStudyGuide()" style="background-color: var(--secondary-color); width: 100%;">📖 Ler Resumo do Módulo</button>
+                <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                    <button onclick="location.reload()">Escolher Outro Módulo</button>
+                </div>
+            </div>
+            <p id="saving-msg" style="color: #666; font-style: italic; margin-top: 20px;">Salvando resultados...</p>
+        </div>
+    </div>
+</div>
+
+<div id="study-modal" class="hidden modal">
+    <div class="modal-content">
+        <span class="close-btn no-print" onclick="closeStudyGuide()">&times;</span>
+        <div id="guide-content" class="guide-body">
+            </div>
+        <div class="no-print" style="text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px;">
+            <button onclick="window.print()" style="background-color: #666;">🖨️ Imprimir Resumo</button>
+            <button onclick="closeStudyGuide()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
