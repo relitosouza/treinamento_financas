@@ -20,12 +20,27 @@
     </div>
 
     <div id="menu-screen" class="hidden" style="text-align: center;">
-        <p>Escolha o tema que deseja treinar hoje:</p>
+        <p>Escolha o nível do desafio:</p>
         <div class="menu-grid">
-            <button class="menu-btn" onclick="selectCategory('planejamento')">📅 Planejamento (PPA/LDO/LOA)</button>
-            <button class="menu-btn" onclick="selectCategory('orcamento')">💰 Orçamento e Pagamento</button>
-            <button class="menu-btn" onclick="selectCategory('contabilidade')">📊 Contabilidade Pública</button>
-            <button class="menu-btn random" onclick="selectCategory('aleatorio')">🎲 Modo Aleatório (Misturado)</button>
+            <button class="menu-btn btn-easy" onclick="selectCategory('planejamento')">
+                🟢 Planejamento (PPA/LDO/LOA)<br>
+                <span style="font-size: 0.9rem; font-weight: normal;">Modo Fácil</span>
+            </button>
+
+            <button class="menu-btn btn-medium" onclick="selectCategory('orcamento')">
+                🟡 Orçamento e Pagamento<br>
+                <span style="font-size: 0.9rem; font-weight: normal;">Modo Médio</span>
+            </button>
+
+            <button class="menu-btn btn-hard" onclick="selectCategory('contabilidade')">
+                🔴 Contabilidade Pública<br>
+                <span style="font-size: 0.9rem; font-weight: normal;">Modo Hard</span>
+            </button>
+
+            <button class="menu-btn random" onclick="selectCategory('aleatorio')">
+                🎲 Modo Aleatório<br>
+                <span style="font-size: 0.9rem; font-weight: normal;">(Misturado)</span>
+            </button>
         </div>
     </div>
 
