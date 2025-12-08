@@ -60,6 +60,36 @@ button {
 button:hover { background-color: var(--secondary-color); transform: translateY(-2px); }
 button:disabled { background-color: #ccc; cursor: not-allowed; transform: none; }
 
+/* Cores específicas para os níveis de dificuldade */
+.btn-easy {
+    background-color: #28a745; /* Verde */
+    color: white;
+    border: 2px solid #218838;
+}
+.btn-easy:hover { background-color: #218838; }
+
+.btn-medium {
+    background-color: #fd7e14; /* Laranja */
+    color: white;
+    border: 2px solid #e36d0d;
+}
+.btn-medium:hover { background-color: #e36d0d; }
+
+.btn-hard {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+    border: 2px solid #c82333;
+}
+.btn-hard:hover { background-color: #c82333; }
+
+/* Ajuste no botão aleatório para manter o padrão */
+.menu-btn.random {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+    border: 2px solid #5a6268;
+}
+.menu-btn.random:hover { background-color: #5a6268; }
+
 .hidden { display: none !important; }
 
 /* MENU GRID */
